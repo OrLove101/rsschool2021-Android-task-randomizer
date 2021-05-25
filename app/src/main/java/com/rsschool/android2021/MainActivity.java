@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
         }
     }
 
-    //TODO: make replace not backstack or recreate fragments
-
     @Override
     public void onBackButtonClick(int result) {
         FirstFragment firstFragment = (FirstFragment) getSupportFragmentManager()
