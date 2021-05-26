@@ -32,36 +32,29 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.container, firstFragment, FIRST_FRAGMENT_TAG)
-                .addToBackStack(FIRST_FRAGMENT_TAG)
                 .commit();
     }
 
     private void openSecondFragment(int min, int max) {
         final Fragment secondFragment = SecondFragment.newInstance(min, max);
-        final FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.container, secondFragment, SECOND_FRAGMENT_TAG)
-                .addToBackStack(SECOND_FRAGMENT_TAG)
                 .commit();
     }
 
     @Override
     public void onGenerateClicked(int min, int max) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                openSecondFragment(min, max);
-            }
-        });
+        openSecondFragment(min, max);
     }
 
     @Override
     public void onBackPressed() {
-        Fragment secondFragment = getSupportFragmentManager().findFragmentByTag(SECOND_FRAGMENT_TAG);
+        SecondFragment secondFragment = (SecondFragment) getSupportFragmentManager()
+                .findFragmentByTag(SECOND_FRAGMENT_TAG);
 
-        if ( secondFragment.isAdded() ) {
-            getSupportFragmentManager().popBackStack();
+        if ( secondFragment != null && secondFragment.isAdded() ) {
+            openFirstFragment(secondFragment.getResultOnBack());
         } else {
             super.onBackPressed();
         }
@@ -69,10 +62,6 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnG
 
     @Override
     public void onBackButtonClick(int result) {
-        FirstFragment firstFragment = (FirstFragment) getSupportFragmentManager()
-                .findFragmentByTag(FIRST_FRAGMENT_TAG);
-
-        firstFragment.updatePreviousResult(result);
-        getSupportFragmentManager().popBackStack();
+        openFirstFragment(result);
     }
 }
